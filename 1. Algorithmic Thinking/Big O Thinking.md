@@ -1,4 +1,5 @@
-#Big O Notation
+# Big O Notation
+
 Big O notation is the language we use for talking about how long an algorithm takes to run. It is how we compare the efficiency of different approaches to a problem. 
 
 With big O notation we express runtime In terms of _how quickly it grows relative to the input, as the input gets arbitrarily large_.
