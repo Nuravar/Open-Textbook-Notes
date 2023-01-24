@@ -148,3 +148,84 @@ What if each *character* in our string were a two-index array with:
 + the character itself
 + a pointer to the next character
 
+<p align="center">
+  <img src="https://www.interviewcake.com/images/svgs/cs_for_hackers__linked_lists_sample.svg?bust=210" />
+</p>
+
+We would call each of these two-item arrays a node and these node will form to create a linked list that is connected through the pointers to the next node. 
+
+> The first node of a linked list is usually called the head while the last node is usually called the tail. 
+
+It is important to have a pointer variable referencing the head of a list - otherwise we would be unable to find our way back to the start of the list. 
+
+Lets say for example in the above picture we want to add a `S` to the end of the string `DEAR`, in the diagram all we would need to do is make the pointer in the `R` node point to `S`! 
+
+This leaves us with a function that has O(1) time which compared to a dynamic array would have cost O(n) time. 
+
+**Linked lists have worst case O(1) appends, which is better than the worst case O(n) time of dynamic arrays**. This is intriguing as technically dynamic arrays have the same overall time append of O(1) when you consider other factors. 
+
+On the other hand, adding a character at the start or middle of an array still has a time complexity of O(1) compared the the O(n) of dynamic arrays.
+
+So if linked lists are so great what is the trade off?
+>The ability to lookup an index in an array has a time complexity of O(1). While in a linked list the time complexity is O(n) as you have to painstakingly navigate through each node until you get the value that you want. 
+
+>Additionally, walking down a linked list is not cache-friendly as the next node could be anywhere in memory. 
+
+So the trade-off with linked lists is that they have faster prepends and faster appends than dynamic arrays, but they have slower lookups. 
+
+## Hash Tables
+
+Quick lookups are often really important. For that reason, we tend to use arrays more often than linked lists. 
+
+For example: if we wanted to count how many times each ASCII character appears in Romeo and Juliet. How would we store these counts?
+
+One simple way would just be to use an array where each index is the relative ASCII number:
+
+<p align="center">
+  <img src="https://www.interviewcake.com/images/svgs/cs_for_hackers__hash_tables_chars_to_ints.svg?bust=210" />
+</p>
+
+But this array is not just a list of values. It is storing two things, the ASCII character number and the counts.
+
+**So we can think of an array as a table with two columns... except you don't really get to pick the values in the indices column since they are always 0, 1, 2, 3, etc.**
+
+But what if we wanted to be able to edit that column? Would it create a faster overall array?
+
+Suppose the problem shifted and we wanted to count the number of times each **word** appears in Romeo and Juliet. Translating a character into an array index was easy. But we will have to do something more clever to translate a word into an array index.
+
+<p align="center">
+  <img src="https://www.interviewcake.com/images/svgs/cs_for_hackers__hash_tables_lies_key_unlabeled.svg?bust=210" />
+</p>
+
+One way that we could do it is that in the word `lies` we could add up the values of the ASCII letters: $$108+105+101+115=429$$
+
+The result is the number 429 but having an array with arbitrary indexes for each letter with a wide variety of slots blank would not make a whole lot of sense. 
++ Lets say that we only had 30 slots in our array. We could force the number into our array through the modulus operator (%). $$ 429 \% 30 = 9 $$
+
+This data structure is called a **hash table** or **hash map**. In our hash table, the counts are the values and the words are the keys. The process we used to translate a key to an array index is called a hashing function. 
+
+<p align="center">
+  <img src="https://www.interviewcake.com/images/svgs/cs_for_hackers__hash_tables_lies_key_labeled.svg?bust=210" />
+</p>
+
+But what if we have two words that add up to the some number like `lies` and `foes` with a value of 429? Since our hash function gives us the same value of 9 for both words, the overlap would be called a hash collision. There are a few different strategies for dealing with them:
+
+The common one is instead of storing the actual values in our array, we can have each array slow hold a pointer to a linked list holding the counts for all the words that a hash to that index. 
+
+<p align="center">
+  <img src="https://www.interviewcake.com/images/svgs/cs_for_hackers__hash_tables_hash_collision.svg?bust=210" />
+</p>
+
+One problem is how would we know each count is for `lies` and the other for `foes`, the answer would simply be creating a new linked list node:
+
+<p align="center">
+  <img src="https://www.interviewcake.com/images/svgs/cs_for_hackers__hash_tables_hash_collision_key_val.svg?bust=210" />
+</p>
+
+>Now lookups in our hash table take O(n) time in the worst case since we have to walk down a linked list! That is true, but the actual worst case scenario would be that *every* key would create a hash collision creating just a linked list.
+
+Collisions are rare enough that on average lookups in a hash table are O(1) time. That is the tradeoff for a hash table, you get fast lookups by key... except some lookups could be slow. 
+
+---
+Citations:
+[Data Structures | Interview Slice](https://www.interviewcake.com/article/cpp/data-structures-coding-interview?course=fc1&section=algorithmic-thinking)
