@@ -224,7 +224,7 @@ One problem is how would we know each count is for `lies` and the other for `foe
 
 >Now lookups in our hash table take O(n) time in the worst case since we have to walk down a linked list! That is true, but the actual worst case scenario would be that *every* key would create a hash collision creating just a linked list.
 
-Collisions are rare enough that on average lookups in a hash table are O(1) time. That is the tradeoff for a hash table, you get fast lookups by key... except some lookups could be slow. 
+Collisions are rare enough that on average lookups in a hash table are O(1) time. That is the trade-off for a hash table, you get fast lookups by key... except some lookups could be slow. 
 
 ---
 Citations:
