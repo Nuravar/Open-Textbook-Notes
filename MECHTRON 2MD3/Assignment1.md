@@ -18,6 +18,8 @@ int main(){
     cout << d << endl;
 }
 ```
+In the above code, I first created a pointer to the integer `b` that was then dereferenced the value of the pointer to assign it a value of 21. I then would create a new integer called `c` to store the value that is twice of `a`'s referent through the `*` deference.
+
 
 ## Question 2
 > Consider the following attempt to allocate a 10-element array of pointers to doubles and initialize the associated double values to 0.0. Rewrite the following (incorrect) code to do this correctly. (Hint: Storage for the doubles needs to be allocated.)
@@ -36,7 +38,7 @@ int main(){
     }
 }
 ```
-
+The incorrect portion of the above code was the fact that the array `dp` did not have its storage allocated. The correct code is shown above. 
 
 ## Question 3
 > What (if anything) is different about the behaviour of the following two function f and g that increment a variable and print its value?
@@ -51,17 +53,17 @@ The difference between the two functions `f` and `g` is the function f passes th
 > White a short C++ function that takes a positive double value x and returns the number of times we can divide x by 2 before we get a number less than two. 
 
 ```cpp
-double countUnderTwo(double x , int count){
+double countUnderTwo(double x){
+    int count = 0;
     while(x>=2){
         x/=2;
         count++;
-        if (count>10000){ //to prevent weird numbers 
-            return -1;
-        }
     } 
     return count;
 }
 ```
+In the `countUnderTwo` function, I first started with a while look to check if the number is less than two. Each time the while loop was run a counter was incremented by one. Once the value is less than two, the counter is returned as the while loop exits.
+
 
 ## Question 5
 >The greatest common divisor, or GCD, of two positive integers n and m is the largest number j, such that n and m are both multiples of j. Euclid proposed a simple algorithm for computing GCD(n, m), where n > m, which is based on a concept known as the Chinese Remainder Theorem. The main idea of the algorithm is to repeatedly perform modulo computations of consecutive pairs of the sequence that starts (n, m,...), until reaching zero. The last nonzero number in this sequence is the GCD of n and m. For example, for n = 80,844 and m = 25,320, the sequence is as follows:
@@ -77,6 +79,7 @@ int GCD(int n , int m){
     return n;
 }
 ```
+For the `GCD` function, I first created a while loop to check if the remainder case was equal to zero. The code works by continously comparing the result of the modulus between two numbers `n` and `m`, where `n` becomes `m`and `m` becomes the result of `n%m`. Once `m` becomes zero it would return the greatest common multiple. There is also no need to error check, as every number has a multiple of 1. 
 
 ## Question 6
 >The birthday paradox says that the probability that two people in a room will have the same birthday is more than half as long as the number of people in the room (n), is greater than 23. This property is not really a paradox, but many people find it surprising. Design a C++ program that can test this paradox by a series of experiments on randomly generated birthdays, which test this paradox for n = 5,10,15,20,...,100. You should run at least 100 experiments for each value of n. Your program should output a single comma-separated line for each n showing: 1) the value of n; 2) the number of experiments that returned two people in that test having the same birthday; 3) the measured probability of 2 people in the group having the same birthday. To calculate “measured probability” for each n: let c be the number of experiments in which at least 2 people had the same birthday and let e be the number of experiments. We define the “measured probability” as c/e. Example output is as follows:
@@ -184,6 +187,39 @@ int main(){
 You should include a default constructor that starts with 2 and 200 as the first two values and a parametric constructor that starts with a specified pair of numbers as the first two values. Include a main method that tests your class using both constructors and generating a progression of 10 values for each. Your program should output 4 lines like the following:
 
 ```cpp
+#include <cstdlib>
+#include <iostream>
+using namespace std;
+
+class Progression {  //  a generic progression
+ public:
+  Progression(long f = 0)  // constructor
+      : first(f), cur(f) {}
+  virtual ~Progression(){};      // destructor
+  void printProgression(int n);  // print the first n values
+ protected:
+  virtual long firstValue();  // reset
+  virtual long nextValue();   // advance
+ protected:
+  long first;  // first value
+  long cur;    // current value
+};
+
+void Progression::printProgression(int n) {  // print n values
+  cout << firstValue();                      // print the first
+  for (int i = 2; i <= n; i++)               // print 2 through n
+    cout << ' ' << nextValue();
+  cout << endl;
+}
+
+long Progression::firstValue() {  //  reset
+  cur = first;
+  return cur;
+}
+long Progression::nextValue() {  // advance
+  return ++cur;
+}
+
 class AProg : public Progression {
     public:
         AProg(long f = 2, long s = 200);  // constructor
