@@ -17,6 +17,11 @@ class Stack {
             ADT.pop();
             return top, top2;
         }
+        double pop(){
+            double top = ADT.top();
+            ADT.pop();
+            return top;
+        }
         double top() {
             double top = ADT.top();
             return top;
@@ -36,10 +41,8 @@ class RPNEvaluator {
     Stack rpn_stack;
     public:
     //constructor
-    RPNEvaluator(string rpn_exp){
-        expression = rpn_exp;
-    }
-    ~RPNEvaluator();
+    RPNEvaluator(string rpn_exp);
+    virtual ~RPNEvaluator() {};
 
     /* 
     Format for solving question 1
@@ -51,10 +54,58 @@ class RPNEvaluator {
     Step 5: if size is not 1 at the end or if the operators are not correct in the switch statement return -1 and print "Error: malformed expression"
     */
     //Evaulate function
-    double Evaluate(expression){
-
-    }
-    
-
+    double Evaluate();
+    void PrintStack(Stack s);
 };
 
+
+RPNEvaluator::RPNEvaluator(string rpn_exp){
+    expression = rpn_exp;
+}
+
+double RPNEvaluator::Evaluate(){
+    //remove spaces
+    for(int i =0;i<expression.length()-1;i++){
+        if(expression[i]==' '){
+            expression.erase(i,1);
+        }
+    }
+    //check if stack works
+    for(int i =0;i<expression.length();i++){
+        rpn_stack.push(expression[i]);
+    }
+    PrintStack(rpn_stack);
+
+}
+
+void RPNEvaluator::PrintStack(Stack s){
+    // If stack is empty then return
+    if (s.isEmpty())
+        return;
+     
+ 
+    int x = s.top();
+ 
+    // Pop the top element of the stack
+    s.pop();
+ 
+    // Recursively call the function PrintStack
+    PrintStack(s);
+ 
+    // Print the stack element starting
+    // from the bottom
+    cout << x << " ";
+ 
+    // Push the same element onto the stack
+    // to preserve the order
+    s.push(x);
+}
+
+int main(){
+    string rpn_exp = "5 2 + 8 3 - * 4 /";
+    // std::cout << "Please enter an expression in RPN format: ";
+    //std::getline(std::cin, rpn_exp);
+    RPNEvaluator rpn(rpn_exp);
+    rpn.Evaluate();
+    return EXIT_SUCCESS;
+}
