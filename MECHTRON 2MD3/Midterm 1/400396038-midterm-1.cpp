@@ -57,7 +57,10 @@ class RPNEvaluator {
 
 bool RPNEvaluator::isNumber(string s){
     for( int i = 0; i < s.length(); i++ ) {
-      if( !isdigit( s[i] )) {
+      if(s[i]=='-'){
+        continue;
+      }
+      if( !isdigit( s[i])) {
          return false;
       }
    }
@@ -91,7 +94,8 @@ double RPNEvaluator::Evaluate(){
     while (iss){
         string subs;
         if (iss >> subs){
-            if (subs!="+" && subs!="-" && subs!="*" && subs !="/" && isNumber(subs)){
+            if (subs!="+"&& subs!="-" && subs!="*" && subs !="/" && isNumber(subs)){
+                cout << subs << endl;
                 rpn_stack.push(stod(subs));
             } else {
                 double num2,num1;
@@ -142,7 +146,7 @@ void RPNEvaluator::PrintStack(Stack s){
 }
 
 int main(){
-    string rpn_exp = "5 2 + 8 3 - *  4 / ";
+    string rpn_exp = "-5 2 + 8 3 - *  4 / ";
     // std::cout << "Please enter an expression in RPN format: ";
     //std::getline(std::cin, rpn_exp);
     RPNEvaluator rpn(rpn_exp);
