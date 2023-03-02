@@ -6,10 +6,6 @@
 #include <sstream>
 using namespace std;
 
-
-
-
-
 class Stack {
     private:
         stack<double> ADT;
@@ -55,15 +51,26 @@ class RPNEvaluator {
     //Evaulate function
     double Evaluate();
     void PrintStack(Stack s);
-    vector<string> split(string str);
-    bool isNum(string exp);
+    bool isNumber(string s);
+    bool isOneUnit(string s);
 };
 
-bool RPNEvaluator::isNum(string exp){
-    for(int i =0;i<exp.length()-1;i++){
-        
+bool RPNEvaluator::isNumber(string s){
+    for( int i = 0; i < s.length(); i++ ) {
+      if( !isdigit( s[i] )) {
+         return false;
+      }
+   }
+   return true;
+}
+bool RPNEvaluator::isOneUnit(string s){
+    if(s.length()==1){
+        return true;
+    } else {
+        return false;
     }
 }
+
 
 RPNEvaluator::RPNEvaluator(string rpn_exp){
     expression = rpn_exp;
@@ -79,39 +86,44 @@ RPNEvaluator::RPNEvaluator(string rpn_exp){
     Step 5: if size is not 1 at the end or if the operators are not correct in the switch statement return -1 and print "Error: malformed expression"
 */
 double RPNEvaluator::Evaluate(){
-    //remove spaces
-    // for(int i =0;i<expression.length()-1;i++){
-    //     if(expression[i]==' '){
-    //         expression.erase(i,1);
-    //     }
-    // }
-    vector<string> exp = split(expression);
-    //check if stack works
-    for(int i =0;i<exp.size();i++){
-        //double num = atof(expression[i]);
-        if (exp[i] != "+", "-", "*", "/" && isdigit(exp[i])){
-            rpn_stack.push((double)expression[i] - '0');
-        } else {
-            double num2 = rpn_stack.pop();
-            double num1 = rpn_stack.pop();
-            switch (expression[i]){
-            case '+':
-                rpn_stack.push(num1+num2);
-                break;
-            case '-':
-                rpn_stack.push(num1-num2);
-                break;
-            case '*':
-                rpn_stack.push(num1*num2);
-                break;
-            case '/':
-                rpn_stack.push(num1/num2);
-                break;
-            default:
-                printf("Error: malformed expression");
-                return -1;
-                break;
+    istringstream iss(expression);
+     vector<string> exp;
+    while (iss){
+        string subs;
+        if (iss >> subs){
+            if (subs!="+" && subs!="-" && subs!="*" && subs !="/" && isNumber(subs)){
+                rpn_stack.push(stod(subs));
+            } else {
+                double num2,num1;
+                if(rpn_stack.size()>=2){
+                    num2 = rpn_stack.pop();
+                    num1 = rpn_stack.pop();
+                }
+                if(isOneUnit(subs)){
+                    switch (subs.at(0)){
+                        case '+':
+                            rpn_stack.push(num1+num2);
+                            break;
+                        case '-':
+                            rpn_stack.push(num1-num2);
+                            break;
+                        case '*':
+                            rpn_stack.push(num1*num2);
+                            break;
+                        case '/':
+                            rpn_stack.push(num1/num2);
+                            break;
+                        default:
+                            printf("Error: malformed expression");
+                            return -1;
+                            break;
+                    }
+                } else {
+                    printf("Error: malformed expression");
+                    return -1;
+                }
             }
+        
         }
     }
     PrintStack(rpn_stack);
@@ -129,18 +141,8 @@ void RPNEvaluator::PrintStack(Stack s){
     s.push(x);
 }
 
-vector<string> RPNEvaluator::split(string str){
-    vector<string> equation;
-    stringstream ss(str);
-    string token;
-    while(getline(ss, token, ' ')) { 
-    equation.push_back(token); 
-    } 
-    return equation; 
-}
-
 int main(){
-    string rpn_exp = "5 2 + 8 3 - * 4 /";
+    string rpn_exp = "5 2 + 8 3 - *  4 / ";
     // std::cout << "Please enter an expression in RPN format: ";
     //std::getline(std::cin, rpn_exp);
     RPNEvaluator rpn(rpn_exp);
