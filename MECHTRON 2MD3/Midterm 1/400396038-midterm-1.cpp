@@ -6,42 +6,42 @@
 #include <sstream>
 using namespace std;
 
+
 class Stack {
-    private:
-        stack<double> ADT;
-    public:
-        void push(double val){
-            ADT.push(val);
-        }
-        double popTwo(){
-            double top = ADT.top();
-            ADT.pop();
-            double top2 = ADT.top();
-            ADT.pop();
-            return top, top2;
-        }
-        double pop(){
-            double top = ADT.top();
-            ADT.pop();
-            //cout << top << endl;
-            return top;
-        }
-        double top() {
-            double top = ADT.top();
-            return top;
-        }
-        bool isEmpty(){
-            return ADT.empty();
-        }
-        int size(){
-            return ADT.size();
-        }
+private:
+    vector<double> data;
+
+public:
+    void push(const double value) {
+        data.push_back(value);
+    }
+
+    double pop() {
+        double topper = data.back();
+        data.pop_back();
+        return topper;
+    }
+
+    double top() {
+        return data.back();
+    }
+
+    double top() const {
+        return data.back();
+    }
+
+    bool empty() const {
+        return data.empty();
+    }
+
+    size_t size() const {
+        return data.size();
+    }
 };
 
 class RPNEvaluator {
     private:
     string expression;
-    double result;
     Stack rpn_stack;
     public:
     //constructor
@@ -55,14 +55,23 @@ class RPNEvaluator {
     bool isOneUnit(string s);
 };
 
+RPNEvaluator::RPNEvaluator(string rpn_exp){
+    expression = rpn_exp;
+}
+
 bool RPNEvaluator::isNumber(string s){
     for( int i = 0; i < s.length(); i++ ) {
-      if(s[i]=='-'){
+      if(s[0]=='-'){
         continue;
       }
-      if( !isdigit( s[i])) {
+      if(s[i]!='.'){
+        if(!isdigit(s[i])) {
          return false;
+        }
+      } else {
+        continue;
       }
+      
    }
    return true;
 }
@@ -74,36 +83,21 @@ bool RPNEvaluator::isOneUnit(string s){
     }
 }
 
-
-RPNEvaluator::RPNEvaluator(string rpn_exp){
-    expression = rpn_exp;
-}
-
-/* 
-    Format for solving question 1
-    Step 1: create a stack for all numbers, heere it is rpn_stack which holds doubles
-    Step 2: if the item extracted from the string is a number push to the stack but if it is a operator pop last two numbers, evaluate 
-    the expression, and push the resulting number
-    Step 3: continue until you are at the end of the string
-    Step 4: if you are at the end of the string you should have only one number left (ie: size = 1) and pop/return the last number
-    Step 5: if size is not 1 at the end or if the operators are not correct in the switch statement return -1 and print "Error: malformed expression"
-*/
 double RPNEvaluator::Evaluate(){
-    istringstream iss(expression);
-     vector<string> exp;
+    istringstream iss(expression); //iss = expression separated by the spaces
     while (iss){
         string subs;
-        if (iss >> subs){
+        if (iss >> subs){ 
             if (subs!="+"&& subs!="-" && subs!="*" && subs !="/" && isNumber(subs)){
                 cout << subs << endl;
-                rpn_stack.push(stod(subs));
+                rpn_stack.push(stod(subs)); //"-5" = -5
             } else {
                 double num2,num1;
                 if(rpn_stack.size()>=2){
                     num2 = rpn_stack.pop();
                     num1 = rpn_stack.pop();
                 }
-                if(isOneUnit(subs)){
+                if(isOneUnit(subs)){ 
                     switch (subs.at(0)){
                         case '+':
                             rpn_stack.push(num1+num2);
@@ -135,7 +129,7 @@ double RPNEvaluator::Evaluate(){
 }
 
 void RPNEvaluator::PrintStack(Stack s){
-    if (s.isEmpty())
+    if (s.empty())
         return;
 
     double x = s.top();
@@ -146,10 +140,11 @@ void RPNEvaluator::PrintStack(Stack s){
 }
 
 int main(){
-    string rpn_exp = "-5 2 + 8 3 - *  4 / ";
+    string rpn_exp = "5  2 + 8 3 - * 4 /";
     // std::cout << "Please enter an expression in RPN format: ";
     //std::getline(std::cin, rpn_exp);
     RPNEvaluator rpn(rpn_exp);
     rpn.Evaluate();
     return EXIT_SUCCESS;
 }
+
