@@ -1,17 +1,15 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <ctype.h>
-#include <algorithm>    // std::rotate
 
-
+//using namespace std;
 
 class Deque {
     private:
         int n; //size
         int f; //front
         int r; //rear
-        int N;
+        int N; //max size
         std::vector<std::string> ADT; //circular vector
     public:
         Deque(int size){
@@ -52,7 +50,7 @@ void Deque::eraseFront(){
     if (n==0){
         return;
     }
-    f = (f - 1 + N) % N;
+    f = (f + 1 + N) % N;
     n--;
 }
 void Deque::eraseBack(){
@@ -72,43 +70,34 @@ std::string Deque::back(){
     if (n==0){
         return "error: empty deque";
     }
-    return ADT[r]
+    return ADT[(r-1+N)%N];
+
 }
 int Deque::size(){
     return n;
 }
 bool Deque::empty(){
-    return N == 0;
+    return n == 0;
 }
 
 
 
 int main(){
-    Deque deque(5); // testing (A)
-    deque.insertBack("2");
-    deque.insertBack("3");
-    deque.insertBack("4");
-    deque.insertBack("5"); 
-    deque.insertFront("1");
-    // deque.printVector(); // testing insert front (B) and back (C)
-    deque.insertBack("6");
-    // deque.printVector(); // testing circular insert back (C)
-    deque.insertFront("7");
-    // deque.printVector(); // testing circular insert front (D)
-    deque.eraseBack();
-    deque.eraseBack();
-    deque.eraseBack();
-    deque.eraseBack();
-    deque.eraseFront();
-    deque.eraseFront();
-    std::string test1 = deque.front();
-    std::string test2 = deque.back();
-    // std::cout << test1 << "|" << test2 <<std::endl; //testing error for front and back
-    // deque.printVector(); //testing erase back (E) and front (F)
-    deque.insertBack("2");
-    deque.insertBack("3");
-    deque.insertBack("4");
-    deque.insertBack("5"); 
-    deque.insertFront("1");
-
+    Deque dq(3);
+    std::cout << "Deque is empty: " << dq.empty() << std::endl;
+    dq.insertFront("hello");
+    std::cout << "Deque size is: " << dq.size() << std::endl;
+    std::cout << "Deque front is: " << dq.front() << std::endl;
+    std::cout << "Deque back is: " << dq.back() << std::endl;
+    dq.eraseFront();
+  std::cout << "Deque size is: " << dq.size() << std::endl;
+    std::cout << "Deque is empty: " << dq.empty() << std::endl;
+    dq.insertFront("world");
+    dq.insertFront("hello");
+   dq.insertFront("help");
+    std::cout << "Deque size is: " << dq.size() << std::endl;
+    std::cout << "Deque is empty: " << dq.empty() << std::endl;
+    std::cout << "Deque front is: " << dq.front() << std::endl;
+    std::cout << "Deque back is: " << dq.back() << std::endl;
+    return 0;
 }
